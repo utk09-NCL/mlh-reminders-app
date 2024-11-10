@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   title: {
-    color: theme.colors.back90,
+    color: theme.colors.black90,
     fontSize: 14,
   },
 });
