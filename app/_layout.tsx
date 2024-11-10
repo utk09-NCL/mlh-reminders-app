@@ -1,46 +1,29 @@
-import { Tabs, useRouter } from "expo-router";
+// app/_layout.tsx
+
+import { Stack, useRouter } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
 import { theme } from "../theme";
-import { StyleSheet } from "react-native";
 
-export default function TabsLayout() {
+export default function RootLayout() {
   const router = useRouter();
-
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: theme.colors.green100,
-      }}
-    >
-      <Tabs.Screen
-        name="index"
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false, headerShadowVisible: true }} />
+      <Stack.Screen
+        name="addReminder"
         options={{
-          title: "Reminders",
-          tabBarIcon: ({ color }) => <Feather name="list" size={24} color={color} />,
-          headerRight: () => (
+          title: "Add New Reminder",
+          presentation: "modal",
+          headerLeft: () => (
             <Feather
-              name="plus"
+              name="chevrons-left"
               size={24}
               color={theme.colors.blue900}
-              style={styles.addReminder}
-              onPress={() => router.push("/addReminder")}
+              onPress={() => router.back()}
             />
           ),
         }}
       />
-      <Tabs.Screen
-        name="completed"
-        options={{
-          title: "Completed Reminders",
-          tabBarIcon: ({ color }) => <Feather name="check-square" size={24} color={color} />,
-        }}
-      />
-    </Tabs>
+    </Stack>
   );
 }
-
-const styles = StyleSheet.create({
-  addReminder: {
-    marginRight: 20,
-  },
-});
