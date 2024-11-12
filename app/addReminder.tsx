@@ -3,17 +3,8 @@ import { theme } from "../theme";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-
-export type Priority = "low" | "medium" | "high";
-
-export type Reminder = {
-  id: string;
-  title: string;
-  date: string;
-  time: string;
-  priority: Priority;
-  completed?: boolean;
-};
+import { addReminder } from "../utils/storageHelper";
+import { Priority, ReminderProps } from "../components/RemindersList";
 
 export default function AddReminder() {
   const router = useRouter();
@@ -34,13 +25,12 @@ export default function AddReminder() {
     setShowTimePicker(false);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!title) {
       Alert.alert("Validation Error", "Please provide a title for the reminder");
       return;
     }
-
-    const newReminder: Reminder = {
+    const newReminder: ReminderProps = {
       id: Date.now().toString(),
       title,
       date: date.toISOString().split("T")[0],
@@ -49,8 +39,10 @@ export default function AddReminder() {
       completed: false,
     };
 
-    console.log(newReminder);
+    await addReminder(newReminder);
+    router.back();
   };
+
   const handleClose = () => {
     console.log("Closed!");
     router.back();

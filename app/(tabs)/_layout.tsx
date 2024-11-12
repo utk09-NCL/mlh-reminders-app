@@ -1,6 +1,6 @@
 // app/(tabs)/_layout.tsx
 
-import { Link, Tabs, useRouter } from "expo-router";
+import { Link, Tabs } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
 import { theme } from "../../theme";
 import { Pressable, StyleSheet } from "react-native";

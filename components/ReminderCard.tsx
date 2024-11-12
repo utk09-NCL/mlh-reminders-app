@@ -1,23 +1,27 @@
 import React, { FC } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { theme } from "../theme";
 
 export type ReminderCardProps = {
+  id: string;
   cardTitle: string;
   icon: React.ComponentProps<typeof Feather>["name"];
   iconBackgroundColor: string;
   numberOfReminders: number;
+  onPress?: () => void;
 };
 
 const ReminderCard: FC<ReminderCardProps> = ({
+  id,
   cardTitle,
   icon,
   iconBackgroundColor,
   numberOfReminders,
+  onPress,
 }) => {
   return (
-    <View style={styles.cardContainer}>
+    <TouchableOpacity onPress={onPress} style={styles.cardContainer} key={id}>
       <View style={[styles.iconContainer, { backgroundColor: iconBackgroundColor }]}>
         <Feather name={icon} size={20} color="white" />
       </View>
@@ -25,7 +29,7 @@ const ReminderCard: FC<ReminderCardProps> = ({
         <Text style={styles.number}>{numberOfReminders}</Text>
         <Text style={styles.title}>{cardTitle}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
