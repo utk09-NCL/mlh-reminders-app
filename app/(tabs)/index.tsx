@@ -1,6 +1,5 @@
 // app/(tabs)/index.tsx
 
-import { StatusBar } from "expo-status-bar";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { theme } from "../../theme";
 import ReminderCard from "../../components/ReminderCard";
@@ -8,6 +7,7 @@ import { useCallback, useState } from "react";
 import RemindersList, { ReminderProps } from "../../components/RemindersList";
 import { useFocusEffect } from "expo-router";
 import { fetchReminders, saveReminders } from "../../utils/storageHelper";
+import * as Haptics from "expo-haptics";
 
 export default function RemindersScreen() {
   const [reminders, setReminders] = useState<ReminderProps[]>([]);
@@ -49,6 +49,7 @@ export default function RemindersScreen() {
         {
           text: "Yes",
           onPress: async () => {
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             const updatedReminders = reminders.map((reminder) =>
               reminder.id === id ? { ...reminder, completed: true } : reminder,
             );
