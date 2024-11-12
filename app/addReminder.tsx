@@ -1,23 +1,55 @@
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { theme } from "../theme";
 import { useRouter } from "expo-router";
 import { useState } from "react";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 export type Priority = "low" | "medium" | "high";
+
+export type Reminder = {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  priority: Priority;
+  completed?: boolean;
+};
 
 export default function AddReminder() {
   const router = useRouter();
 
   const [title, setTitle] = useState("");
+  const [date, setDate] = useState<Date>(new Date());
+  const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+  const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
   const [priority, setPriority] = useState<Priority>("low");
+
+  const handleDateConfirm = (selectedDate: Date) => {
+    setDate(selectedDate);
+    setShowDatePicker(false);
+  };
+
+  const handleTimeConfirm = (selectedTime: Date) => {
+    setDate(selectedTime);
+    setShowTimePicker(false);
+  };
 
   const handleSave = () => {
     if (!title) {
-      console.error("Please add reminder title");
-    } else {
-      console.log({ title, priority });
-      router.back();
+      Alert.alert("Validation Error", "Please provide a title for the reminder");
+      return;
     }
+
+    const newReminder: Reminder = {
+      id: Date.now().toString(),
+      title,
+      date: date.toISOString().split("T")[0],
+      time: date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      priority,
+      completed: false,
+    };
+
+    console.log(newReminder);
   };
   const handleClose = () => {
     console.log("Closed!");
@@ -33,6 +65,32 @@ export default function AddReminder() {
         placeholder="Add your reminder here"
         value={title}
         onChangeText={setTitle}
+      />
+
+      <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
+        <Text style={styles.leftAlignedText}>Select Date: {date.toLocaleDateString()}</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => setShowTimePicker(true)} style={styles.datePickerButton}>
+        <Text style={styles.leftAlignedText}>
+          Select Time: {date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+        </Text>
+      </TouchableOpacity>
+
+      <DateTimePickerModal
+        isVisible={showDatePicker}
+        mode="date"
+        textColor="black"
+        onConfirm={handleDateConfirm}
+        onCancel={() => setShowDatePicker(false)}
+      />
+
+      <DateTimePickerModal
+        isVisible={showTimePicker}
+        mode="time"
+        textColor="black"
+        onConfirm={handleTimeConfirm}
+        onCancel={() => setShowTimePicker(false)}
       />
 
       <View style={styles.radioGroup}>
@@ -99,6 +157,14 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
+  datePickerButton: {
+    alignItems: "flex-start",
+    backgroundColor: theme.colors.white95,
+    borderRadius: 5,
+    marginBottom: 20,
+    padding: 10,
+    width: "100%",
+  },
   headlineText: {
     fontSize: 24,
     fontWeight: "bold",
@@ -109,8 +175,13 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.black90,
     borderRadius: 10,
     borderWidth: 1,
+    marginBottom: 14,
     padding: 20,
     width: "100%",
+  },
+  leftAlignedText: {
+    color: theme.colors.black50,
+    fontSize: 16,
   },
   radioGroup: {
     alignItems: "center",

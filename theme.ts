@@ -4,7 +4,7 @@ export const theme = {
     white95: "#f0f0f0",
     white90: "#e6e6e6",
     white50: "#dddddd",
-    white10: "#0000004d",
+    white10: "#0000004d", // translucent
 
     black100: "#000000",
     black90: "#1a1a1a",
